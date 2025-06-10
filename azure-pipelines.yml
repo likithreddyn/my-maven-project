@@ -11,19 +11,21 @@ steps:
   - checkout: self
     displayName: 'Checkout Code from GitHub'
 
-  - script: mvn clean test
+  - script: |
+      cd StudentRegistrationApp
+      mvn clean test
     displayName: 'Build and Run Unit Tests'
 
   - task: PublishTestResults@2
     inputs:
-      testResultsFiles: '**/target/surefire-reports/TEST-*.xml'  # Double asterisk ensures it works in subdirectories
+      testResultsFiles: 'StudentRegistrationApp/target/surefire-reports/TEST-*.xml'  # path updated for subdir
       testResultsFormat: 'JUnit'
       failTaskOnMissingResultsFile: true
     displayName: 'Publish Maven Test Results'
 
   - task: PublishBuildArtifacts@1
     inputs:
-      PathtoPublish: 'target'
+      PathtoPublish: 'StudentRegistrationApp/target'
       ArtifactName: 'drop'
       publishLocation: 'Container'
     displayName: 'Publish Build Artifacts'
@@ -32,4 +34,3 @@ steps:
       echo Add other tasks to build, test, and deploy your project.
       echo See https://aka.ms/yaml
     displayName: 'Run a multi-line script'
-
