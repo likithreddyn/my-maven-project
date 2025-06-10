@@ -1,19 +1,35 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+# Azure DevOps Starter Pipeline
+# Customize this pipeline to build, test, and deploy your Java application using Maven
 
 trigger:
 - main
 
 pool:
-  name: MyLocalPool
+  name: MyLocalPool  # Make sure this is a valid agent pool defined in your DevOps environment
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+  - checkout: self
+    displayName: 'Checkout Code from GitHub'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  - script: mvn clean test
+    displayName: 'Build and Run Unit Tests'
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '**/target/surefire-reports/TEST-*.xml'  # Double asterisk ensures it works in subdirectories
+      testResultsFormat: 'JUnit'
+      failTaskOnMissingResultsFile: true
+    displayName: 'Publish Maven Test Results'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: 'target'
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
+    displayName: 'Publish Build Artifacts'
+
+  - script: |
+      echo Add other tasks to build, test, and deploy your project.
+      echo See https://aka.ms/yaml
+    displayName: 'Run a multi-line script'
+
