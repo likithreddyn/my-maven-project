@@ -18,7 +18,7 @@ steps:
 
   - task: PublishTestResults@2
     inputs:
-      testResultsFiles: 'StudentRegistrationApp/target/surefire-reports/TEST-*.xml'  # path updated for subdir
+      testResultsFiles: '**/target/surefire-reports/TEST-*.xml'  # path updated for subdir
       testResultsFormat: 'JUnit'
       failTaskOnMissingResultsFile: true
     displayName: 'Publish Maven Test Results'
